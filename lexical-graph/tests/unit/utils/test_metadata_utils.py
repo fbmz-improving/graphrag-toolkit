@@ -16,6 +16,7 @@ from unittest.mock import patch
 from graphrag_toolkit.lexical_graph.indexing.utils.metadata_utils import (
     get_properties_str,
     last_accessed_date,
+    remove_collection_items_from_metadata
 )
 
 
@@ -66,3 +67,34 @@ def test_last_accessed_date_accepts_extra_args():
     """The function signature is (*args), so extra positional args are silently ignored."""
     result = last_accessed_date("ignored", "also ignored")
     assert "last_accessed_date" in result
+
+def test_remove_collection_items_from_metadata():
+    metadata = {
+        'k1': 'v1',
+        'k2': 1,
+        'k3': True,
+        'k4': [],
+        'k5': [1,2,3],
+        'k6': {},
+        'k7': {
+            'a': 1,
+            'b': 'B'
+        },
+        'k8': {1, 2, 3},
+        'k9': None
+    }
+
+    (valid_metadata, removed_metadata) = remove_collection_items_from_metadata(metadata)
+
+    assert len(valid_metadata.items()) == 4
+    assert valid_metadata['k1'] == metadata['k1']
+    assert valid_metadata['k2'] == metadata['k2']
+    assert valid_metadata['k3'] == metadata['k3']
+    assert valid_metadata['k9'] is None
+
+    assert len(removed_metadata.items()) == 5
+    assert removed_metadata['k4'] == metadata['k4']
+    assert removed_metadata['k5'] == metadata['k5']
+    assert removed_metadata['k6'] == metadata['k6']
+    assert removed_metadata['k7'] == metadata['k7']
+    assert removed_metadata['k8'] == metadata['k8']
