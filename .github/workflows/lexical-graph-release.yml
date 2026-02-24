@@ -60,9 +60,7 @@ jobs:
 
       - name: Update pip install version in lexical-graph notebooks
         working-directory: examples/lexical-graph/notebooks
-        env:
-          VERSION: ${{ steps.version.outputs.version }}
-        run: sed -i "s|/refs/tags/v[^#\"]*\.zip|/refs/tags/${VERSION}.zip|g" 00-Setup.ipynb
+        run: python3 -c "import re; v='${{ steps.version.outputs.version }}'; nb=open('00-Setup.ipynb').read(); updated=re.sub(r'/refs/tags/v[^#]+\.zip','/refs/tags/'+v+'.zip',nb); assert updated!=nb,'No match in 00-Setup.ipynb'; open('00-Setup.ipynb','w').write(updated); print('Updated to',v)"
 
       - name: Zip lexical-graph notebooks
         working-directory: examples/lexical-graph/notebooks
@@ -81,9 +79,7 @@ jobs:
 
       - name: Update pip install version in lexical-graph-hybrid-dev notebooks
         working-directory: examples/lexical-graph-hybrid-dev/notebooks
-        env:
-          VERSION: ${{ steps.version.outputs.version }}
-        run: sed -i "s|/refs/tags/v[^#\"]*\.zip|/refs/tags/${VERSION}.zip|g" 00-Setup.ipynb
+        run: python3 -c "import re; v='${{ steps.version.outputs.version }}'; nb=open('00-Setup.ipynb').read(); updated=re.sub(r'/refs/tags/v[^#]+\.zip','/refs/tags/'+v+'.zip',nb); assert updated!=nb,'No match in 00-Setup.ipynb'; open('00-Setup.ipynb','w').write(updated); print('Updated to',v)"
 
       - name: Zip lexical-graph-hybrid-dev notebooks
         working-directory: examples/lexical-graph-hybrid-dev/notebooks
