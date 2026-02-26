@@ -27,10 +27,6 @@ The `LexicalGraphIndex` allows you to run the extract and build pipelines togeth
 
 Indexing supports [multi-tenancy](multi-tenancy.md), whereby you can store separate lexical graphs in the same backend graph and vector stores.
 
-#### Code examples
-
-The code examples here are formatted to run in a Jupyter notebook. If you’re building an application with a main entry point, put your application logic inside a method, and add an [`if __name__ == '__main__'` block](./faq.md#runtimeerror-please-use-nest_asyncioapply-to-allow-nested-event-loops).
-
 #### Extract
 
 The extraction stage is, by default, a three-step process: 
