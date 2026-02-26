@@ -66,6 +66,7 @@ jobs:
         working-directory: examples/lexical-graph/notebooks
         run: |
           zip lexical-graph-examples.zip *.ipynb
+          cp lexical-graph-examples.zip lexical-graph-examples-${{ steps.version.outputs.version }}.zip
           cp lexical-graph-examples.zip lexical-graph-examples-latest.zip
 
       - name: Upload lexical-graph-examples.zip
@@ -74,6 +75,7 @@ jobs:
           name: lexical-graph-examples
           path: |
             examples/lexical-graph/notebooks/lexical-graph-examples.zip
+            examples/lexical-graph/notebooks/lexical-graph-examples-${{ steps.version.outputs.version }}.zip
             examples/lexical-graph/notebooks/lexical-graph-examples-latest.zip
           retention-days: 30
 
@@ -85,6 +87,7 @@ jobs:
         working-directory: examples/lexical-graph-hybrid-dev/notebooks
         run: |
           zip lexical-graph-hybrid-dev-examples.zip *.ipynb
+          cp lexical-graph-hybrid-dev-examples.zip lexical-graph-hybrid-dev-examples-${{ steps.version.outputs.version }}.zip
           cp lexical-graph-hybrid-dev-examples.zip lexical-graph-hybrid-dev-examples-latest.zip
 
       - name: Upload lexical-graph-hybrid-dev-examples.zip
@@ -93,6 +96,7 @@ jobs:
           name: lexical-graph-hybrid-dev-examples
           path: |
             examples/lexical-graph-hybrid-dev/notebooks/lexical-graph-hybrid-dev-examples.zip
+            examples/lexical-graph-hybrid-dev/notebooks/lexical-graph-hybrid-dev-examples-${{ steps.version.outputs.version }}.zip
             examples/lexical-graph-hybrid-dev/notebooks/lexical-graph-hybrid-dev-examples-latest.zip
           retention-days: 30
 
@@ -103,9 +107,9 @@ jobs:
         with:
           files: |
             lexical-graph/dist/*
-            examples/lexical-graph/notebooks/lexical-graph-examples.zip
+            examples/lexical-graph/notebooks/lexical-graph-examples-${{ steps.version.outputs.version }}.zip
             examples/lexical-graph/notebooks/lexical-graph-examples-latest.zip
-            examples/lexical-graph-hybrid-dev/notebooks/lexical-graph-hybrid-dev-examples.zip
+            examples/lexical-graph-hybrid-dev/notebooks/lexical-graph-hybrid-dev-examples-${{ steps.version.outputs.version }}.zip
             examples/lexical-graph-hybrid-dev/notebooks/lexical-graph-hybrid-dev-examples-latest.zip
           generate_release_notes: true
           prerelease: >-
