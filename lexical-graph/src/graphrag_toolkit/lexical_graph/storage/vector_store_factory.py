@@ -115,8 +115,8 @@ class VectorStoreFactory():
                 VectorStore instances.
         """
         indexes = {}
-        for v in vector_store_list:
-            for k, v in v.indexes:
+        for vs in vector_store_list:
+            for k, v in vs.indexes.items():
                 indexes[k] = v
                       
         return VectorStore(indexes=indexes)
