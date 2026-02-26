@@ -97,6 +97,12 @@ To fix,  [enable access](https://docs.aws.amazon.com/bedrock/latest/userguide/mo
 
 ---
 
+#### Importing the package patches llama_index async internals
+
+When you import `graphrag_toolkit.lexical_graph`, the package patches `llama_index.core.async_utils.asyncio_run` unconditionally ([`__init__.py:34`](https://github.com/awslabs/graphrag-toolkit/blob/main/lexical-graph/src/graphrag_toolkit/lexical_graph/__init__.py#L34)). The patch makes LlamaIndex's internal async runner work inside Jupyter notebooks by re-using the existing event loop instead of creating a new one. If no running loop is found, it falls back to `asyncio.run()`. This can interact unexpectedly with other code using LlamaIndex in the same process, particularly if that code relies on `asyncio_run` starting a clean event loop. There is currently no opt-out.
+
+---
+
 #### WARNING:graph_store:Retrying query in x seconds because it raised ConcurrentModificationException
 
 While indexing data in Amazon Neptune Database, Neptune can sometimes issue a `ConcurrentModificationException`. This occurs because multiple workers are attempting to [update the same set of vertices](https://docs.aws.amazon.com/neptune/latest/userguide/transactions-exceptions.html). The GraphRAG Toolkit automatically retries transactionsb that are cancelled because of a `ConcurrentModificationException`. If the maximum number of retries is exceeded and the indexing fails, consider reducing the number of workers in the build stage using [`GraphRAGConfig.build_num_workers`](./configuration.md#graphragconfig).

@@ -57,6 +57,9 @@ class ExtractionConfig():
         preferred_entity_classifications (List[str]): A list of preferred entity
         classifications to focus on during the extraction process.
         Defaults to DEFAULT_ENTITY_CLASSIFICATIONS if not specified.
+        preferred_topics: A list of preferred topic names (or a callable that
+        returns them) used to seed the LLM during topic extraction. Defaults
+        to an empty list.
         infer_entity_classifications (Union[InferClassificationsConfig, bool]):
         Specifies whether to infer entity classifications, using either a
         configuration object or a boolean flag. Defaults to False.
@@ -102,6 +105,9 @@ class BuildConfig():
         domain labels as part of the build output.
         source_metadata_formatter (Optional[SourceMetadataFormatter]): Formatter
         responsible for handling source metadata during the build.
+        enable_versioning (Optional[bool]): Whether to enable versioned updates
+        during the build stage. Overrides GraphRAGConfig.enable_versioning when
+        set.
     """
     def __init__(self,
                  build_filters: Optional[BuildFilters] = None,
@@ -145,7 +151,7 @@ class IndexingConfig():
         chunking (Optional[List[NodeParser]]): List of chunking strategies to be
         applied during indexing. If no chunking strategies are provided, a
         default `SentenceSplitter` is used with a chunk size of 256 and an
-        overlap of 20.
+        overlap of 25.
         extraction (Optional[ExtractionConfig]): Configuration for data extraction,
         defaulting to a new instance of `ExtractionConfig` if not provided.
         build (Optional[BuildConfig]): Build-specific configuration, defaulting to
@@ -187,25 +193,6 @@ class IndexingConfig():
         self.batch_config = batch_config  # None = do not use batch inference
 
 IndexingConfigType = Union[IndexingConfig, ExtractionConfig, BuildConfig, BatchConfig, List[NodeParser]]
-
-def to_indexing_config(indexing_config:Optional[IndexingConfigType]=None) -> IndexingConfig:
-    if not indexing_config:
-        return IndexingConfig()
-    if isinstance(indexing_config, IndexingConfig):
-        return indexing_config
-    elif isinstance(indexing_config, ExtractionConfig):
-        return IndexingConfig(extraction=indexing_config)
-    elif isinstance(indexing_config, BuildConfig):
-        return IndexingConfig(build=indexing_config)
-    elif isinstance(indexing_config, BatchConfig):
-        return IndexingConfig(batch_config=indexing_config)
-    elif isinstance(indexing_config, list):
-        for np in indexing_config:
-            if not isinstance(np, NodeParser):
-                raise ValueError(f'Invalid indexing config type: {type(np)}')
-        return IndexingConfig(chunking=indexing_config)
-    else:
-        raise ValueError(f'Invalid indexing config type: {type(indexing_config)}')
 
 def to_indexing_config(indexing_config: Optional[IndexingConfigType] = None) -> IndexingConfig:
     """
